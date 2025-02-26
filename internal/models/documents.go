@@ -1,9 +1,15 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Document struct {
-	gorm.Model
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
