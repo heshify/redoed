@@ -26,6 +26,11 @@ func (h *DocumentHandler) CreateDocument(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	if err := utils.ValidateDocument(newDocument); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
 	if err := h.Repo.CreateDocument(&newDocument); err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -70,7 +75,13 @@ func (h *DocumentHandler) UpdateDocument(w http.ResponseWriter, r *http.Request)
 	}
 
 	var newDocument models.Document
+
 	if err := utils.ParseJSON(r, &newDocument); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := utils.ValidateDocument(newDocument); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}

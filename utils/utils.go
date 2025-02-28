@@ -5,7 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/heshify/redoed/internal/models"
 )
+
+func ValidateDocument(doc models.Document) error {
+	if doc.Title == "" {
+		return fmt.Errorf("title is required")
+	}
+	return nil
+}
 
 func WriteJSON(w http.ResponseWriter, status int, data any) error {
 	w.Header().Set("Content-Type", "application/json")
