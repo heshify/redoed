@@ -1,12 +1,13 @@
 package handlers
 
 import (
-	"encoding/json"
-	"log"
+	"errors"
 	"net/http"
 
 	"github.com/heshify/redoed/internal/models"
 	"github.com/heshify/redoed/internal/repository"
+	"github.com/heshify/redoed/utils"
+	"gorm.io/gorm"
 )
 
 type DocumentHandler struct {
@@ -19,59 +20,91 @@ func NewDocumentHandler(repo *repository.DocumentRepository) *DocumentHandler {
 
 func (h *DocumentHandler) CreateDocument(w http.ResponseWriter, r *http.Request) {
 	var newDocument models.Document
-	err := json.NewDecoder(r.Body).Decode(&newDocument)
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		log.Println("Error decoding request body: ", err)
+
+	if err := utils.ParseJSON(r, &newDocument); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	err = h.Repo.CreateDocument(&newDocument)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Failed to create document", http.StatusInternalServerError)
+
+	if err := h.Repo.CreateDocument(&newDocument); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(newDocument)
-	if err != nil {
-		http.Error(w, "Failed to encode documents to JSON: "+err.Error(), http.StatusInternalServerError)
+
+	if err := utils.WriteJSON(w, http.StatusCreated, newDocument); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 }
 
 func (h *DocumentHandler) DeleteDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	err := h.Repo.DeleteDocument(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Failed to delete document", http.StatusInternalServerError)
+	if id == "" {
+		utils.WriteError(w, http.StatusBadRequest, errors.New("missing document ID"))
 		return
 	}
+
+	if err := h.Repo.DeleteDocument(id); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, errors.New("failed to delete document"))
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, map[string]string{"message": "document deleted"})
 }
 
 func (h *DocumentHandler) UpdateDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	var newDocument models.Document
-	err := json.NewDecoder(r.Body).Decode(&newDocument)
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		log.Println("Error decoding request body: ", err)
+	if id == "" {
+		utils.WriteError(w, http.StatusBadRequest, errors.New("missing document ID"))
 		return
 	}
-	h.Repo.UpdateDocument(id, &newDocument)
+
+	_, err := h.Repo.GetDocument(id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.WriteError(w, http.StatusNotFound, errors.New("document not found"))
+		} else {
+			utils.WriteError(w, http.StatusInternalServerError, errors.New("failed to fetch document"))
+		}
+		return
+	}
+
+	var newDocument models.Document
+	if err := utils.ParseJSON(r, &newDocument); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.Repo.UpdateDocument(id, &newDocument); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, errors.New("failed to update document"))
+		return
+	}
+
+	if err := utils.WriteJSON(w, http.StatusOK, newDocument); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
 }
 
 func (h *DocumentHandler) GetDocumentById(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	document, err := h.Repo.GetDocument(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Failed to retireve document", http.StatusInternalServerError)
+	if id == "" {
+		utils.WriteError(w, http.StatusBadRequest, errors.New("missing document ID"))
 		return
 	}
-	err = json.NewEncoder(w).Encode(document)
+
+	document, err := h.Repo.GetDocument(id)
 	if err != nil {
-		http.Error(w, "Failed to encode documents to JSON: "+err.Error(), http.StatusInternalServerError)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			utils.WriteError(w, http.StatusNotFound, errors.New("document not found"))
+		} else {
+			utils.WriteError(w, http.StatusInternalServerError, errors.New("failed to fetch document"))
+		}
+		return
+	}
+
+	if err := utils.WriteJSON(w, http.StatusOK, document); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 }
@@ -79,13 +112,12 @@ func (h *DocumentHandler) GetDocumentById(w http.ResponseWriter, r *http.Request
 func (h *DocumentHandler) GetAllDocuments(w http.ResponseWriter, r *http.Request) {
 	documents, err := h.Repo.GetDocuments()
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "Failed to retireve document", http.StatusInternalServerError)
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-	err = json.NewEncoder(w).Encode(documents)
-	if err != nil {
-		http.Error(w, "Failed to encode documents to JSON: "+err.Error(), http.StatusInternalServerError)
+
+	if err := utils.WriteJSON(w, http.StatusOK, documents); err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 }
