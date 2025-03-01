@@ -1,6 +1,8 @@
 # Redoed
 
-![Work in Progress](https://img.shields.io/badge/status-WIP-orange) ![Go Version](https://img.shields.io/badge/Go-1.24-blue) ![License](https://img.shields.io/badge/License-MIT-green) [![Go Report Card](https://goreportcard.com/badge/github.com/heshify/redoed)](https://goreportcard.com/report/github.com/heshify/redoed)
+![Work in Progress](https://img.shields.io/badge/status-WIP-orange) ![Go Version](https://img.shields.io/badge/Go-1.24-blue) ![License](https://img.shields.io/badge/License-MIT-green)
+[![Go Report Card](https://goreportcard.com/badge/github.com/heshify/redoed?1)](https://goreportcard.com/report/github.com/heshify/redoed)
+
 
 > 🚧 **Work in Progress**: This project is in development stage. Follow the progress at heshify.github.io
 
