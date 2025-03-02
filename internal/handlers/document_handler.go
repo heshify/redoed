@@ -97,7 +97,7 @@ func (h *DocumentHandler) UpdateDocument(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *DocumentHandler) GetDocumentById(w http.ResponseWriter, r *http.Request) {
+func (h *DocumentHandler) GetDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	if id == "" {
 		utils.WriteError(w, http.StatusBadRequest, errors.New("missing document ID"))
@@ -120,7 +120,7 @@ func (h *DocumentHandler) GetDocumentById(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (h *DocumentHandler) GetAllDocuments(w http.ResponseWriter, r *http.Request) {
+func (h *DocumentHandler) GetDocuments(w http.ResponseWriter, r *http.Request) {
 	documents, err := h.Repo.GetDocuments()
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)

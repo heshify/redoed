@@ -15,8 +15,8 @@ func NewRouter() *http.ServeMux {
 	r := http.NewServeMux()
 
 	r.HandleFunc("POST /api/document", docHandler.CreateDocument)
-	r.HandleFunc("GET /api/document", docHandler.GetAllDocuments)
-	r.HandleFunc("GET /api/document/{id}", docHandler.GetDocumentById)
+	r.HandleFunc("GET /api/document", docHandler.GetDocuments)
+	r.HandleFunc("GET /api/document/{id}", docHandler.GetDocument)
 	r.HandleFunc("PUT /api/document/{id}", docHandler.UpdateDocument)
 	r.HandleFunc("DELETE /api/document/{id}", docHandler.DeleteDocument)
 	return r
