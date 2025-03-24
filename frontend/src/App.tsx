@@ -1,10 +1,15 @@
 import Editor from "@/components/markdown-editor";
+import Header from "@/components/header";
+import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
   return (
-    <>
-      <Editor />
-    </>
+    <ThemeProvider>
+      <div>
+        <Header />
+        <Editor />
+      </div>
+    </ThemeProvider>
   );
 }
 

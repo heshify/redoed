@@ -1,12 +1,13 @@
-import { useCodeMirror, basicSetup } from "@uiw/react-codemirror";
+import { useCodeMirror, basicSetup, EditorView } from "@uiw/react-codemirror";
 import { useCallback, useState } from "react";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
-import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
+import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import { tags as t } from "@lezer/highlight";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useTheme } from "./theme-provider";
 
 const markdownHighlightStyle = HighlightStyle.define([
   { tag: t.heading1, fontSize: "2em", fontWeight: "bold" },
@@ -14,7 +15,21 @@ const markdownHighlightStyle = HighlightStyle.define([
   { tag: t.heading3, fontSize: "1.5em", fontWeight: "bold" },
 ]);
 
+export const myTheme = EditorView.theme({
+  "&": {
+    backgroundColor: "transparent !important",
+  },
+});
+
 function Editor() {
+  const { theme } = useTheme();
+  const resolvedTheme =
+    theme === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : theme;
+
   const [value, setValue] = useState<string>("# Welcome to Redoed!");
   const handleChange = useCallback((val: string) => setValue(val), []);
 
@@ -29,8 +44,9 @@ function Editor() {
         addKeymap: true,
       }),
       syntaxHighlighting(markdownHighlightStyle),
+      myTheme,
     ],
-    theme: tokyoNight,
+    theme: resolvedTheme === "dark" ? githubDark : githubLight,
     onChange: handleChange,
   });
 
