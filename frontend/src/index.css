@@ -115,3 +115,25 @@
     @apply prose-headings:text-black prose-a:underline-offset-2 dark:prose-headings:text-neutral-100;
   }
 }
+
+.cm-scroller::-webkit-scrollbar,
+.scrollbar::-webkit-scrollbar {
+  @apply w-2;
+}
+
+/* Track */
+.cm-scroller::-webkit-scrollbar-track,
+.scrollbar::-webkit-scrollbar-track {
+  @apply: bg-background;
+}
+
+/* Handle */
+.cm-scroller::-webkit-scrollbar-thumb,
+.scrollbar::-webkit-scrollbar-thumb {
+  @apply rounded-sm bg-gray-300 dark:bg-gray-600;
+}
+
+.cm-editor,
+.cm-focused {
+  @apply focus-within:outline-none;
+}

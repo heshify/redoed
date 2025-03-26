@@ -5,10 +5,10 @@ import { ThemeProvider } from "./components/theme-provider";
 function App() {
   return (
     <ThemeProvider>
-      <div>
+      <main className="h-fit">
         <Header />
         <Editor />
-      </div>
+      </main>
     </ThemeProvider>
   );
 }

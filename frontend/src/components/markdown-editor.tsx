@@ -15,7 +15,7 @@ const markdownHighlightStyle = HighlightStyle.define([
   { tag: t.heading3, fontSize: "1.5em", fontWeight: "bold" },
 ]);
 
-export const myTheme = EditorView.theme({
+const myTheme = EditorView.theme({
   "&": {
     backgroundColor: "transparent !important",
   },
@@ -51,12 +51,12 @@ function Editor() {
   });
 
   return (
-    <div className="grid grid-cols-2 py-2">
+    <div className="w-screen sm:grid sm:grid-cols-2 py-2">
       <div>
-        <div ref={setContainer} className="border rounded p-2" />
+        <div ref={setContainer} className="border-r-1" />
       </div>
       <div>
-        <div className="border h-[90vh] rounded p-2 markdown-preview overflow-scroll">
+        <div className="h-[90vh] p-2 markdown-preview overflow-y-auto scrollbar hidden sm:block">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
         </div>
       </div>
@@ -65,3 +65,4 @@ function Editor() {
 }
 
 export default Editor;
+
