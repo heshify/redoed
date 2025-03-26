@@ -8,6 +8,7 @@ import { tags as t } from "@lezer/highlight";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useTheme } from "./theme-provider";
+import "github-markdown-css";
 
 const markdownHighlightStyle = HighlightStyle.define([
   { tag: t.heading1, fontSize: "2em", fontWeight: "bold" },
@@ -44,6 +45,7 @@ function Editor() {
         addKeymap: true,
       }),
       syntaxHighlighting(markdownHighlightStyle),
+      EditorView.lineWrapping,
       myTheme,
     ],
     theme: resolvedTheme === "dark" ? githubDark : githubLight,
@@ -56,7 +58,7 @@ function Editor() {
         <div ref={setContainer} className="border-r-1" />
       </div>
       <div>
-        <div className="h-[90vh] p-2 markdown-preview overflow-y-auto scrollbar hidden sm:block">
+        <div className="h-[90vh] markdown-body p-2 markdown-preview overflow-y-auto scrollbar hidden sm:block !bg-background">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
         </div>
       </div>
@@ -65,4 +67,3 @@ function Editor() {
 }
 
 export default Editor;
-

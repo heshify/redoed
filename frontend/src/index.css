@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
-@plugin '@tailwindcss/typography';
-
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
@@ -108,11 +106,8 @@
   body {
     @apply bg-background text-foreground;
   }
-  .markdown-preview {
-    @apply prose prose-neutral dark:prose-invert prose-img:mx-auto prose-img:my-auto max-w-full;
-    @apply prose-headings:font-semibold;
-    /*@apply prose-headings:text-black prose-a:underline-offset-2 dark:prose-headings:text-[var(--clr-accent)];*/
-    @apply prose-headings:text-black prose-a:underline-offset-2 dark:prose-headings:text-neutral-100;
+  .markdown-body {
+    @apply !bg-background !text-foreground;
   }
 }
 
