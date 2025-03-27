@@ -8,7 +8,7 @@ import { tags as t } from "@lezer/highlight";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useTheme } from "./theme-provider";
-import "github-markdown-css";
+import "github-markdown-css/github-markdown.css";
 
 const markdownHighlightStyle = HighlightStyle.define([
   { tag: t.heading1, fontSize: "2em", fontWeight: "bold" },

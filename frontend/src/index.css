@@ -132,3 +132,13 @@
 .cm-focused {
   @apply focus-within:outline-none;
 }
+
+.markdown-body ul {
+  list-style-type: disc !important;
+  margin-left: 1.5rem !important;
+}
+
+.markdown-body ol {
+  list-style-type: decimal !important;
+  margin-left: 1.5rem !important;
+}
