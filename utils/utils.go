@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/mail"
 
 	"github.com/heshify/redoed/internal/models"
 )
@@ -12,6 +13,36 @@ import (
 func ValidateDocument(doc models.Document) error {
 	if doc.Title == "" {
 		return fmt.Errorf("title is required")
+	}
+	return nil
+}
+
+func validEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
+}
+
+func ValidateUser(user models.User) error {
+	if user.Name == "" {
+		return fmt.Errorf("Name is required")
+	}
+
+	if user.Email == "" {
+		return fmt.Errorf("Email is required")
+	}
+	if !validEmail(user.Email) {
+		return fmt.Errorf("Invalid email")
+	}
+
+	return nil
+}
+
+func ValidateLoginPayload(credentials models.AuthUser) error {
+	if credentials.Email == "" {
+		return fmt.Errorf("Email is required")
+	}
+	if credentials.Password == "" {
+		return fmt.Errorf("Password is required")
 	}
 	return nil
 }
