@@ -8,9 +8,10 @@ import (
 
 type Document struct {
 	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Title     string    `json:"title"`
+	Title     string    `gorm:"not null" json:"title"`
 	Content   string    `json:"content"`
-	UserID    uuid.UUID `json:"author_id"`
+	UserID    uint      `gorm:"not null;index" json:"user_id"`
+	User      User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

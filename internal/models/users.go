@@ -7,11 +7,11 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Documents []Document
+	ID        uuid.UUID  `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	Name      string     `gorm:"not null" json:"name"`
+	Email     string     `gorm:"unique;not null" json:"email"`
+	Password  string     `gorm:"not null" json:"password"`
+	Documents []Document `gorm:"foreignKey:UserID" json:"documents"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

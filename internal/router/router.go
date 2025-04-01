@@ -14,11 +14,13 @@ func NewRouter() *http.ServeMux {
 
 	userRepo := repository.NewUserRepository()
 	userHandler := handlers.NewUserHandler(userRepo)
+	authHandler := handlers.NewAuthHandler(userRepo)
 	r := http.NewServeMux()
 
 	//auth routes
-	r.HandleFunc("POST /api/auth/login", userHandler.Login)
-	r.HandleFunc("POST /api/auth/register", userHandler.RegisterUser)
+	r.HandleFunc("POST /api/auth/login", authHandler.Login)
+	r.HandleFunc("POST /api/auth/register", authHandler.RegisterUser)
+	r.HandleFunc("POST /api/auth/refresh", authHandler.Refresh)
 	// user routes
 	r.HandleFunc("GET /api/user/{id}", userHandler.GetUser)
 	r.HandleFunc("GET /api/user", userHandler.GetUsers)
